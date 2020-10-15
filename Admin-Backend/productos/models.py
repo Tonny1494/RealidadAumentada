@@ -61,6 +61,7 @@ class Local(models.Model):
     estrellas = models.IntegerField(blank=True, null=True)
     vistas = models.IntegerField(blank=True, null=True)
     direccion = models.CharField(max_length=25, blank=True, null=True)
+    slogan = models.CharField(max_length=25, blank=True, null=True)
     categoria = models.ForeignKey(Categoria ,on_delete=models.CASCADE, blank=True, null=True)
     latitud = models.CharField(max_length=50, blank=True, null=True)
     longitud = models.CharField(max_length=50, blank=True, null=True)
