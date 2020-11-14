@@ -9,33 +9,45 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content id="ra-camera">
-  <div id="map2"></div>
-
-  <div  *ngFor="let poi of pois; let i = index">
-    <div [hidden]="!poi.isVisible" [style.transform]="'translateX('+ poi.traslate +'px)'"
-    [style.-ms-transform]="'translateX('+ poi.traslate +'px)'"
-    [style.-webkit-transform]="'translateX('+ poi.traslate +'px)'"
-    [style.-moz-transform]="'translateX('+ poi.traslate +'px)'"
-    [style.-o-transform]="'translateX('+ poi.traslate +'px)'">
-      <div class="poi">
-          <div class="imgLeft">
-            <img src="assets/images/poi.png"/>
+<ion-content [fullscreen]="true">
+  
+  
+  <!-- <ion-button (click)="openCamera()" expand="full" *ngIf="!cameraActive">Open Camera</ion-button> -->
+  <div id="cameraPreview" class="cameraPreview">
+    <div *ngIf="cameraActive" class="image-overlay">
+      <div  *ngFor="let poi of pois; let i = index">
+        <div [style.transform]="'translateX('+ poi.traslate +'px)'"
+        [style.-ms-transform]="'translateX('+ poi.traslate +'px)'"
+        [style.-webkit-transform]="'translateX('+ poi.traslate +'px)'"
+        [style.-moz-transform]="'translateX('+ poi.traslate +'px)'"
+        [style.-o-transform]="'translateX('+ poi.traslate +'px)'">
+          <div class="poi">
+              <div class="imgLeft">
+                <img src="assets/images/poi.png"/>
+              </div>
+              <div class="textContent">
+                <h1>{{poi.name}}</h1>
+                <p class="poiName">{{poi.subtitle}}</p>
+                <p class="pull-left" style="font-weight:50%">
+                  <ion-icon name="star" class="blue" text-end text-right></ion-icon>
+                  <ion-icon name="star" class="blue" text-end text-right></ion-icon>
+                  <ion-icon name="star" class="blue" text-end text-right></ion-icon>
+                  <ion-icon name="star" class="blue" text-end text-right></ion-icon>
+                  <ion-icon name="star" class="empty" text-end text-right></ion-icon>
+                </p>
+                <p class="km pull-right">{{poi.distance}}km</p>
+              </div>
           </div>
-          <div class="textContent">
-            <h1>{{poi.name}}</h1>
-            <p class="poiName">{{poi.subtitle}}</p>
-            <p class="pull-left" style="font-weight:50%">
-              <ion-icon name="star" class="blue" text-end text-right></ion-icon>
-              <ion-icon name="star" class="blue" text-end text-right></ion-icon>
-              <ion-icon name="star" class="blue" text-end text-right></ion-icon>
-              <ion-icon name="star" class="blue" text-end text-right></ion-icon>
-              <ion-icon name="star" class="empty" text-end text-right></ion-icon>
-            </p>
-            <p class="km pull-right">{{poi.distance}}km</p>
-          </div>
+          <div class="arrow-down"></div>
+        </div>
       </div>
-      <div class="arrow-down"></div>
-    </div>
-  </div>
+</div>
+</div>
 </ion-content>
+<ion-footer fullscreen id="bannerP" class="ion-padding" scroll-y="false">
+  <ion-slides [options]="slideOptions" pager="true" #slider (ionSlidesDidLoad)="slidesDidLoad(slider)">
+    <ion-slide *ngFor="let img of images">
+      <img [src]="img">
+    </ion-slide>
+  </ion-slides>
+</ion-footer>

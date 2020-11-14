@@ -18,6 +18,7 @@ export class LocalesPage implements OnInit {
 
   getCategorias() { //llamamos a la funcion getPost de nuestro servicio.
     this.rest.getCategorias().subscribe( data => {
+      console.log(data);
       for (var elemento of data.results){
         let tipo = elemento['tipo']
         let categoria = elemento['id_categoria']
@@ -29,11 +30,12 @@ export class LocalesPage implements OnInit {
           document.getElementById('Locales').innerHTML += plantilla
 
           this.rest.getLocales().subscribe( data => {
+            console.log(data);
             for (var elemento of data.results){
-              let nombreComercial = elemento['nombreComercial']
+              let nombreComercial = elemento['nombre_comercial']
               let idCat = elemento["categoria"]
               let idLocal = elemento["id_local"]
-              let logo = elemento["srcLogo"]
+              let logo = elemento["src_logo"]
               let descripcion = elemento["descripcion"]
               if (idCat == categoria){
                   let plantilla = `<ion-item >
@@ -57,9 +59,7 @@ export class LocalesPage implements OnInit {
       }
     })
   }
-  logout(){
-    this.authservice.logout();
-  }
+  
   
 
 }

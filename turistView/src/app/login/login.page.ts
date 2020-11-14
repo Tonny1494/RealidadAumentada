@@ -19,7 +19,7 @@ export class LoginPage implements OnInit {
   doLogin()
   {
     this.authService.login(this.email, this.password).then( () =>{
-      this.router.navigate(['/ra-camera']);
+      this.router.navigate(['/ra-camera/'+this.email]);
     }).catch(err => {
       this.toastMessage("Los datos son incorrectos o no existe el usuario");
     })
@@ -38,7 +38,7 @@ export class LoginPage implements OnInit {
     
     this.authService.loginWithGoogle().then( () =>{
       this.toastMessage("Ingreso Exitoso");
-      this.router.navigate(['/ra-camera']);
+      this.router.navigate(['/ra-camera/'+this.email]);
     }).catch(err =>{
       alert('algo salio mal contacta a soporte');
       alert(err);
@@ -50,7 +50,7 @@ export class LoginPage implements OnInit {
 
     this.authService.loginWithFacebook().then( () =>{
       this.toastMessage("Ingreso Exitoso");
-      this.router.navigate(['/ra-camera']);
+      this.router.navigate(['/ra-camera/'+this.email]);
     }).catch(err =>{
       alert('algo salio mal contacta a soporte')
       alert(err);

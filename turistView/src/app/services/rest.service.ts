@@ -8,7 +8,7 @@ import { catchError, retry } from 'rxjs/operators';
 })
 export class RestService {
 
-  url = 'https://eibesana96.pythonanywhere.com';
+  url = 'https://tonny.pythonanywhere.com';
   
   constructor(private http: HttpClient) {  }
 
@@ -37,20 +37,28 @@ export class RestService {
   
    getCategorias(): Observable<any>{
      
-    return this.http.get<any>(this.url+'/Categoria/?format=json').pipe(retry(2),catchError(this.handleError));
+    return this.http.get<any>(this.url+'/adminD/categoria/?format=json').pipe(retry(2),catchError(this.handleError));
     
     
   }
   getLocales(): Observable<any>{
      
-    return this.http.get<any>(this.url+'/Local/?format=json').pipe(retry(2),catchError(this.handleError));
+    return this.http.get<any>(this.url+'/adminD/local/?format=json').pipe(retry(2),catchError(this.handleError));
     
   }
 
   getLocal(idLocal:string ): Observable<any>{
      
-    return this.http.get<any>(this.url+'/Local/'+idLocal+'/?format=json').pipe(retry(2),catchError(this.handleError));
+    return this.http.get<any>(this.url+'/adminD/local/'+idLocal+'/?format=json').pipe(retry(2),catchError(this.handleError));
     
     
   }
+  getPublicidades(): Observable<any>{
+    return this.http.get<any>(this.url+'/adminD/publicidad/?format=json').pipe(retry(2),catchError(this.handleError));
+  }
+  getFavoritos(): Observable<any>{
+    return this.http.get<any>(this.url+'/adminD/favorito/?format=json').pipe(retry(2),catchError(this.handleError));
+  }
+
+
 }

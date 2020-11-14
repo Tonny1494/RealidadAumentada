@@ -1,12 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController, Platform, AlertController } from '@ionic/angular';
-import { CameraPreview, CameraPreviewOptions } from '@ionic-native/camera-preview/ngx';
+import { Component } from '@angular/core';
+import { Platform } from '@ionic/angular';
+import { Plugins } from "@capacitor/core"
+const { CameraPreview } = Plugins;
+import { CameraPreviewOptions } from '@capacitor-community/camera-preview';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation/ngx';
 import { filter } from 'rxjs/operators';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+
 import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion/ngx';
 import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation/ngx';
-import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
-import { AuthService } from "src/app/services/auth.service";
+
+import { RestService } from '../services/rest.service'; //importamos nuestro service
+import { IonSlides } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
+
+
+
+//
+import '@capacitor-community/camera-preview';
+
+//
+
 
 declare var google;
 @Component({
@@ -14,7 +28,9 @@ declare var google;
   templateUrl: './ra-camera.page.html',
   styleUrls: ['./ra-camera.page.scss'],
 })
-export class RaCameraPage implements OnInit {
+export class RaCameraPage  {
+  public user: string;
+  
   map: any;
   subscriptionGeolocation: any;
   subscriptionOrientation: any;
@@ -23,55 +39,71 @@ export class RaCameraPage implements OnInit {
   currentLocation: Geoposition;
   currentMarker: any;
 
-  cameraPreviewOpts: CameraPreviewOptions = {
-    x: 180,
-    y: 58,
-    width: window.screen.width,
-    height: window.screen.height,
-    camera: 'rear',
-    tapPhoto: true,
-    previewDrag: false,
-    toBack: true
-    };
+  cameraActive=false;
 
-  pois = [{
-    latitude: -2.213728,//41.656803,
-    longitude: -79.919136,//-0.878283,
-    distance: null,
-    bearing: null,
-    name: 'Basílica del Pilar',
-    isVisible: false,
-    traslate: null,
-    marker: null,
-    subtitle: 'Monumento Histórico'
-  },
-  {
-    latitude: -2.213739,//41.683640,
-    longitude: -79.919132,//-0.887370,
-    distance: null,
-    bearing: null,
-    name: 'EINA',
-    isVisible: false,
-    traslate: null,
-    marker: null,
-    subtitle: 'Antiguo CPS'
 
-  },
-  {
-    latitude: -2.213703,//41.670448,
-    longitude: -79.919120,//-0.890001,
-    distance: null,
-    bearing: null,
-    name: 'Gran Casa',
-    isVisible: false,
-    traslate: null,
-    marker: null,
-    subtitle: 'Centro Comercial'
-  }]
+  pois = []
 
-  constructor(private authservice:AuthService,public platform: Platform, public navCtrl: NavController, private cameraPreview: CameraPreview, private geolocation: Geolocation, public deviceMotion: DeviceMotion, public deviceOrientation: DeviceOrientation, public androidPermissions: AndroidPermissions, public alertCtrl: AlertController) {
+  images = []
+
+  slideOptions = {
+    initialSlide: 1,
+    speed: 400,
+  };
+  slidesDidLoad(slides: IonSlides) {
+    slides.startAutoplay();
   }
 
+  constructor(private route: ActivatedRoute,public rest : RestService, public platform: Platform, public androidPermissions: AndroidPermissions, private geolocation: Geolocation, public deviceMotion: DeviceMotion, public deviceOrientation: DeviceOrientation) {}
+
+  obtenerPunto(){
+    this.rest.getLocales().subscribe( data => {
+      console.log(data);
+      for (var elemento of data.results){
+        let nombreComercial = elemento['nombre_comercial']
+        let lat = elemento["latitud"]
+        let log = elemento["longitud"]
+      this.pois.push({
+        latitude: lat,//41.656803,
+        longitude: log,//-0.878283,
+        distance: null,
+        bearing: null,
+        name: nombreComercial,
+        isVisible: false,
+        traslate: null,
+        marker: null,
+        subtitle: 'Local de prueba'
+      });
+    }
+      console.log(this.pois);
+    });
+  }
+  obtenerPublicidades(){
+    this.rest.getPublicidades().subscribe( data => {
+      console.log(data);
+      for (var elemento of data.results){
+        let scr = elemento['src_imagen'];
+      this.images.push(scr);
+    }
+      console.log(this.images);
+    });
+  }
+  openCamera() {
+
+    const cameraPreviewOptions: CameraPreviewOptions = {
+      x: 0,
+      y: 0,
+      width: window.screen.width,
+      height: window.screen.height,
+      position: 'rear',
+      toBack: true,
+      className:'cameraPreview',
+      parent:'cameraPreview'
+      };
+
+    CameraPreview.start(cameraPreviewOptions);
+      this.cameraActive=true;
+  }
   ionViewDidLoad() {
     this.platform.ready().then(() => {
       if (this.platform.is('android')) {
@@ -94,20 +126,14 @@ export class RaCameraPage implements OnInit {
   }
 
   ionViewWillLeave() {
-    console.log('ionViewWillLeave!!')
-    let elem: any = <HTMLElement>document.getElementById('ra-camera');
-
-      elem.style = "display: none";
-      console.log(elem);
-    this.cameraPreview.stopCamera();
+    
+   // this.cameraPreview.stopCamera();
+   CameraPreview.stop();
     this.subscriptionGeolocation.unsubscribe();
     this.subscriptionOrientation.unsubscribe();
     this.subscriptionAcceleration.unsubscribe();
   }
   
-
-  
-
   getOrientation(): void {
     // Watch the device compass heading change
     this.subscriptionOrientation = this.deviceOrientation.watchHeading({ frequency: 50 }).subscribe(
@@ -133,15 +159,11 @@ export class RaCameraPage implements OnInit {
   getAcceleration(): void {
     this.subscriptionAcceleration = this.deviceMotion.watchAcceleration({ frequency: 500 }).subscribe((acceleration: DeviceMotionAccelerationData) => {
       if (acceleration.y > 6) {
-        document.getElementById('map2').style.display = 'none'
+        document.getElementById('cameraPreview').style.display = 'none'
       } else {
-        document.getElementById('map2').style.display = ''
+        document.getElementById('cameraPreview').style.display = ''
       }
     });
-  }
-
-  getCamera(){
-    this.cameraPreview.startCamera(this.cameraPreviewOpts);
   }
 
   getPosition(){
@@ -162,7 +184,7 @@ export class RaCameraPage implements OnInit {
 
   loadMap(position: Geoposition): void {
     // create a new map by passing HTMLElement
-    let mapEle: HTMLElement = document.getElementById('map2');
+    let mapEle: HTMLElement = document.getElementById('cameraPreview');
     // create LatLng object
     let myLatLng = { lat: position.coords.latitude, lng: position.coords.longitude };
     // create map
@@ -227,22 +249,20 @@ export class RaCameraPage implements OnInit {
     return bearing; // returns angle in grades from North
   }
 
-
-  ngOnInit() {
+  ngOnInit(){
+    this.user = this.route.snapshot.paramMap.get("user");
+    this.obtenerPunto();
+    this.obtenerPublicidades();
     if (this.platform.is('cordova')) {
-      this.getCamera();
+      this.openCamera();
       this.getAcceleration();
       this.getPosition();
       this.getOrientation();
     } else {
-      // Cordova not accessible: do nothing
       alert('Cordova not accesible');
     }
   }
 
-  logout(){
-    this.authservice.logout();
-  }
-
+  
   
 }

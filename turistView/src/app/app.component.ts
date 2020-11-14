@@ -4,6 +4,7 @@ import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from "src/app/services/auth.service";
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -13,44 +14,15 @@ import { AuthService } from "src/app/services/auth.service";
 })
 export class AppComponent implements OnInit {
   public selectedIndex = 0;
-  public appPages = [
-    {
-      title: 'RA-360',
-      url: '/ra-camera',
-      icon: 'location'
-    },
-    {
-      title: 'Scanner',
-      url: '/scanner',
-      icon: 'scan'
-    },
-    {
-      title: 'Locales',
-      url: 'locales',
-      icon: 'heart'
-    },
-    {
-      title: 'Notificaciones',
-      url: 'notificaciones',
-      icon: 'archive'
-    },
-    {
-      title: 'Favoritos',
-      url: 'favoritos',
-      icon: 'trash'
-    },
-    {
-      title: 'Perfil',
-      url: 'perfil',
-      icon: 'warning'
-    }
-  ];
+  public user: string;
+  public appPages = [];
 
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private authservice:AuthService
+    private authservice:AuthService,
+    private route: ActivatedRoute
   ) {
     this.initializeApp();
   }
@@ -63,6 +35,39 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.user = this.route.snapshot.paramMap.get("user");
+    this.appPages = [
+      {
+        title: 'RA-360',
+        url: '/ra-camera/'+this.user,
+        icon: 'location'
+      },
+      {
+        title: 'Scanner',
+        url: '/scanner/'+this.user,
+        icon: 'scan'
+      },
+      {
+        title: 'Locales',
+        url: 'locales/'+this.user,
+        icon: 'business'
+      },
+      {
+        title: 'Notificaciones',
+        url: 'notificaciones/'+this.user,
+        icon: 'notifications'
+      },
+      {
+        title: 'Favoritos',
+        url: 'favoritos/'+this.user,
+        icon: 'heart'
+      },
+      {
+        title: 'Perfil',
+        url: 'perfil/'+this.user,
+        icon: 'person'
+      }
+    ];
     const path = window.location.pathname.split('folder/')[1];
     if (path !== undefined) {
       this.selectedIndex = this.appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());

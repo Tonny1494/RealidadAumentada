@@ -10,7 +10,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 //
 //
-import { CameraPreview } from '@ionic-native/camera-preview/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { DeviceMotion} from '@ionic-native/device-motion/ngx';
 import { DeviceOrientation } from '@ionic-native/device-orientation/ngx';
@@ -26,7 +25,6 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
 import {HttpClientModule } from '@angular/common/http';
-
 
 
 @NgModule({
@@ -48,7 +46,6 @@ import {HttpClientModule } from '@angular/common/http';
     DeviceOrientation,
     DeviceMotion,
     Geolocation,
-    CameraPreview,
     Facebook,
     GooglePlus,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
