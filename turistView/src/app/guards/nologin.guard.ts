@@ -20,7 +20,7 @@ export class NologinGuard implements CanActivate {
         if (isNullOrUndefined(auth)){
           return true;
         }
-        this.router.navigate(['/ra-camera/:user'])
+        this.router.navigate(['/ra-camera'])
         return false;
       }))
       

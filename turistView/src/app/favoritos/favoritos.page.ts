@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 export class FavoritosPage implements OnInit {
 
   public user: string;
+  locales = [];
   constructor(private route: ActivatedRoute,private authservice:AuthService,public rest : RestService, ) { }
 
   ngOnInit() {
@@ -27,24 +28,15 @@ export class FavoritosPage implements OnInit {
           this.rest.getLocal(local).subscribe( data => {
             console.log(data);
             let nombreComercial = data['nombre_comercial']
-              let idCat = data["categoria"]
               let idLocal = data["id_local"]
               let logo = data["src_logo"]
               let descripcion = data["descripcion"]
-              let plantilla = `<ion-item >
-                                <ion-avatar >
-                                  <img src="${logo}" alt="">
-                                </ion-avatar>
-                                <ion-label class="info">
-                                  <h2><a href="/local/${idLocal}">${nombreComercial}</a></h2>
-                                  <p>${descripcion}</p>
-                                </ion-label>
-                              </ion-item>
-                              `
-                document.getElementById('Favoritos').innerHTML += plantilla
-              
-      
-                
+              this.locales.push(
+                {nombreComercial:nombreComercial,
+                  idLocal:idLocal,
+                  logo:logo,
+                  descripcion:descripcion
+              });
             }
           )
 

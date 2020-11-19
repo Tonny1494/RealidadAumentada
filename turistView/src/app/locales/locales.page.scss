@@ -9,6 +9,7 @@ ion-menu-button {
     display: flex;
     padding-top: 0.3in;
     padding-bottom: 0.2in;
+    padding-right: 0.2in;
     justify-content: center;
     padding-right: 0.5in;
     img {
@@ -26,4 +27,3 @@ ion-toolbar {
   --background: transparent;
   background-image: linear-gradient(90deg, rgba(48, 118, 232, 1) 0%,rgba(110, 55, 211, 1) 100%);
   }
-

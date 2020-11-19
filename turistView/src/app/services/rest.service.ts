@@ -60,5 +60,9 @@ export class RestService {
     return this.http.get<any>(this.url+'/adminD/favorito/?format=json').pipe(retry(2),catchError(this.handleError));
   }
 
+  getPerfil(email:string): Observable<any>{
+    return this.http.get<any>(this.url+'/adminD/usuario/'+email+'/?format=json').pipe(retry(2),catchError(this.handleError));
+  }
+
 
 }

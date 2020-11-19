@@ -10,7 +10,18 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" id="Favoritos">  
+<ion-content [fullscreen]="true"  > 
+  <ion-list>
+    <ion-item *ngFor="let q of locales; let j = index" id="cardLocal">
+      <ion-avatar >
+        <img src={{q.logo}} alt="">
+      </ion-avatar>
+      <ion-label class="info">
+        <h2><a href="/local/{{q.idLocal}}">{{q.nombreComercial}}</a></h2>
+        <p>{{q.descripcion}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
   
 
 </ion-content>

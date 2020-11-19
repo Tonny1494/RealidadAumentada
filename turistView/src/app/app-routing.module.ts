@@ -10,32 +10,32 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'scanner/:user',
+    path: 'scanner',
     canActivate:[AuthGuard],
     loadChildren: () => import('./scanner/scanner.module').then( m => m.ScannerPageModule)
   },
   {
-    path: 'ra-camera/:user',
+    path: 'ra-camera',
     canActivate:[AuthGuard],
     loadChildren: () => import('./ra-camera/ra-camera.module').then( m => m.RaCameraPageModule)
   },
   {
-    path: 'notificaciones/:user',
+    path: 'notificaciones',
     canActivate:[AuthGuard],
     loadChildren: () => import('./notificaciones/notificaciones.module').then( m => m.NotificacionesPageModule)
   },
   {
-    path: 'locales/:user',
+    path: 'locales',
     canActivate:[AuthGuard],
     loadChildren: () => import('./locales/locales.module').then( m => m.LocalesPageModule)
   },
   {
-    path: 'favoritos/:user',
+    path: 'favoritos',
     canActivate:[AuthGuard],
     loadChildren: () => import('./favoritos/favoritos.module').then( m => m.FavoritosPageModule)
   },
   {
-    path: 'perfil/:user',
+    path: 'perfil',
     canActivate:[AuthGuard],
     loadChildren: () => import('./perfil/perfil.module').then( m => m.PerfilPageModule)
   },

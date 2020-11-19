@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from "src/app/services/auth.service";
+import { AngularFireAuth } from "@angular/fire/auth"
+
 
 @Component({
   selector: 'app-perfil',
@@ -8,12 +10,15 @@ import { AuthService } from "src/app/services/auth.service";
 })
 export class PerfilPage implements OnInit {
 
-  constructor(private authservice:AuthService) { }
+  constructor(private authservice:AuthService ) { }
 
   ngOnInit() {
+    console.log(this.authservice.getPerfil());
   }
   logout(){
     this.authservice.logout();
   }
+
+  
 
 }

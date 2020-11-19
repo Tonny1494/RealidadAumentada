@@ -10,6 +10,8 @@ import { RestService } from '../services/rest.service'; //importamos nuestro ser
 })
 export class LocalesPage implements OnInit {
 
+  categorias =[];
+  locales = [];
   constructor(public rest : RestService, private authservice:AuthService) { }
 
   ngOnInit() {
@@ -17,20 +19,13 @@ export class LocalesPage implements OnInit {
   }
 
   getCategorias() { //llamamos a la funcion getPost de nuestro servicio.
-    this.rest.getCategorias().subscribe( data => {
-      console.log(data);
+    this.rest.getCategorias().subscribe( data => {      
       for (var elemento of data.results){
         let tipo = elemento['tipo']
+        this.categorias.push(tipo);
+        let localesxCat =[];
         let categoria = elemento['id_categoria']
-        let plantilla = `<ion-list id="${tipo}">
-                        <ion-list-header>
-                          <h3>${tipo}</h3> 
-                        </ion-list-header>
-                      </ion-list>`
-          document.getElementById('Locales').innerHTML += plantilla
-
-          this.rest.getLocales().subscribe( data => {
-            console.log(data);
+        this.rest.getLocales().subscribe( data => {
             for (var elemento of data.results){
               let nombreComercial = elemento['nombre_comercial']
               let idCat = elemento["categoria"]
@@ -38,24 +33,18 @@ export class LocalesPage implements OnInit {
               let logo = elemento["src_logo"]
               let descripcion = elemento["descripcion"]
               if (idCat == categoria){
-                  let plantilla = `<ion-item >
-                                    <ion-avatar >
-                                      <img src="${logo}" alt="">
-                                    </ion-avatar>
-                                    <ion-label class="info">
-                                      <h2><a href="/local/${idLocal}">${nombreComercial}</a></h2>
-                                      <p>${descripcion}</p>
-                                    </ion-label>
-                                  </ion-item>
-                                  `
-                    document.getElementById(tipo).innerHTML += plantilla
+                localesxCat.push(
+                  {nombreComercial:nombreComercial,
+                    idLocal:idLocal,
+                    logo:logo,
+                    descripcion:descripcion
+                });
               }
       
                 
             }
+            this.locales.push(localesxCat);
           })
-
-
       }
     })
   }

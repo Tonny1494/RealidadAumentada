@@ -5,6 +5,7 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx'
 import { auth } from 'firebase'
 import { Router } from "@angular/router";
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
+import { map } from "rxjs/operators"
 
 
 @Injectable({
@@ -70,5 +71,12 @@ export class AuthService {
     })
 
     }
+
+    getPerfil(){
+      return this.AFauth.currentUser.then(auth =>{
+        console.log(auth.email);
+      });
+    }
+
   }
 

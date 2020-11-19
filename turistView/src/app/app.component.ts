@@ -39,32 +39,32 @@ export class AppComponent implements OnInit {
     this.appPages = [
       {
         title: 'RA-360',
-        url: '/ra-camera/'+this.user,
+        url: '/ra-camera',
         icon: 'location'
       },
       {
         title: 'Scanner',
-        url: '/scanner/'+this.user,
+        url: '/scanner',
         icon: 'scan'
       },
       {
         title: 'Locales',
-        url: 'locales/'+this.user,
+        url: 'locales',
         icon: 'business'
       },
       {
         title: 'Notificaciones',
-        url: 'notificaciones/'+this.user,
+        url: 'notificaciones',
         icon: 'notifications'
       },
       {
         title: 'Favoritos',
-        url: 'favoritos/'+this.user,
+        url: 'favoritos',
         icon: 'heart'
       },
       {
         title: 'Perfil',
-        url: 'perfil/'+this.user,
+        url: 'perfil',
         icon: 'person'
       }
     ];

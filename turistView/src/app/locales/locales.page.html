@@ -12,7 +12,21 @@
     
   </ion-toolbar>
 </ion-header>
-<ion-content [fullscreen]="true" id="Locales">  
+<ion-content [fullscreen]="true"  > 
+  <ion-list *ngFor="let p of categorias; let i = index">
+    <ion-list-header>
+      <h3>{{ p }}</h3> 
+    </ion-list-header>
+    <ion-item *ngFor="let q of locales[i]; let j = index" id="cardLocal">
+      <ion-avatar >
+        <img src={{q.logo}} alt="">
+      </ion-avatar>
+      <ion-label class="info">
+        <h2><a href="/local/{{q.idLocal}}">{{q.nombreComercial}}</a></h2>
+        <p>{{q.descripcion}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
   
 
 </ion-content>
