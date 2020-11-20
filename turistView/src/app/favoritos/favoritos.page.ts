@@ -1,48 +1,48 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import { AuthService } from "src/app/services/auth.service";
-import { RestService } from '../services/rest.service'; //importamos nuestro service
-import { ActivatedRoute } from '@angular/router';
-
+import { RestService } from "../services/rest.service"; //importamos nuestro service
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
-  selector: 'app-favoritos',
-  templateUrl: './favoritos.page.html',
-  styleUrls: ['./favoritos.page.scss'],
+  selector: "app-favoritos",
+  templateUrl: "./favoritos.page.html",
+  styleUrls: ["./favoritos.page.scss"],
 })
 export class FavoritosPage implements OnInit {
-
   public user: string;
   locales = [];
-  constructor(private route: ActivatedRoute,private authservice:AuthService,public rest : RestService, ) { }
+  constructor(
+    private route: ActivatedRoute,
+    private authservice: AuthService,
+    public rest: RestService
+  ) {}
 
   ngOnInit() {
     this.user = this.route.snapshot.paramMap.get("user");
     console.log(this.user);
-    this.getFavoritos() ;
+    this.getFavoritos();
   }
-  getFavoritos() { //llamamos a la funcion getPost de nuestro servicio.
-    this.rest.getFavoritos().subscribe( data => {
+  
+  getFavoritos() {
+    //llamamos a la funcion getPost de nuestro servicio.
+    this.rest.getFavoritos().subscribe((data) => {
       console.log(data);
-      for (var elemento of data.results){
-        let local = elemento['id_local'];
-          this.rest.getLocal(local).subscribe( data => {
-            console.log(data);
-            let nombreComercial = data['nombre_comercial']
-              let idLocal = data["id_local"]
-              let logo = data["src_logo"]
-              let descripcion = data["descripcion"]
-              this.locales.push(
-                {nombreComercial:nombreComercial,
-                  idLocal:idLocal,
-                  logo:logo,
-                  descripcion:descripcion
-              });
-            }
-          )
-
-
+      for (var elemento of data.results) {
+        let local = elemento["id_local"];
+        this.rest.getLocal(local).subscribe((data) => {
+          console.log(data);
+          let nombreComercial = data["nombre_comercial"];
+          let idLocal = data["id_local"];
+          let logo = data["src_logo"];
+          let descripcion = data["descripcion"];
+          this.locales.push({
+            nombreComercial: nombreComercial,
+            idLocal: idLocal,
+            logo: logo,
+            descripcion: descripcion,
+          });
+        });
       }
-    })
+    });
   }
-
 }
