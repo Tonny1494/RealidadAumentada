@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from "../services/auth.service";
 import { Router } from "@angular/router"
 import { ActionSheetController } from '@ionic/angular';
+import { RestService } from "../services/rest.service"; //importamos nuestro service
 
 
 
@@ -15,19 +16,36 @@ export class RegisterPage implements OnInit {
   email: string;
   password: string;
   rpass:string;
-  name: string;
+  nombre: string;
+  apellido: string;
+  telefono: string;
 
   
-  constructor(private authService: AuthService,  private router : Router, public actionSheetController: ActionSheetController) { }
+  constructor(public rest: RestService,private authService: AuthService,  private router : Router, public actionSheetController: ActionSheetController) { }
   
 
   doRegister()
   {
-    this.authService.register(this.email, this.password, this.name).then( () =>{
-      this.router.navigate(['/login']);
-    }).catch(err => {
-      alert('algo ocurrio');
-    })
+    if (this.email!=null && this.password !=null && this.nombre!=null && this.apellido!=null && this.telefono!=null){
+      this.authService.register(this.email, this.password, this.nombre+" "+this.apellido).then( () =>{
+        this.router.navigate(['/login']);
+        this.rest.postPerfil(this.email,this.password,this.nombre,this.apellido,this.telefono).then(() =>{
+          console.log("Se registro en pythonanywhere");
+        }).catch(err => {
+          alert(err);
+        });
+      }).catch(err => {
+        if (err = "Error: The email address is already in use by another account."){
+          alert("Usuario Registrado")
+        }else{
+          alert(err);
+        }
+        
+      });
+    }
+    else{
+      alert("Datos incompletos!!")
+    }
   }
   ngOnInit() {
   }

@@ -8,7 +8,7 @@ import { catchError, retry } from 'rxjs/operators';
 })
 export class RestService {
 
-  url = 'https://tonny.pythonanywhere.com';
+  url = 'https://tonny.pythonanywhere.com/adminD';
   
   constructor(private http: HttpClient) {  }
 
@@ -37,32 +37,56 @@ export class RestService {
   
    getCategorias(): Observable<any>{
      
-    return this.http.get<any>(this.url+'/adminD/categoria/?format=json').pipe(retry(2),catchError(this.handleError));
+    return this.http.get<any>(this.url+'/categoria/?format=json').pipe(retry(2),catchError(this.handleError));
     
     
   }
   getLocales(): Observable<any>{
      
-    return this.http.get<any>(this.url+'/adminD/local/?format=json').pipe(retry(2),catchError(this.handleError));
+    return this.http.get<any>(this.url+'/local/?format=json').pipe(retry(2),catchError(this.handleError));
     
   }
 
   getLocal(idLocal:string ): Observable<any>{
      
-    return this.http.get<any>(this.url+'/adminD/local/'+idLocal+'/?format=json').pipe(retry(2),catchError(this.handleError));
+    return this.http.get<any>(this.url+'/local/'+idLocal+'/?format=json').pipe(retry(2),catchError(this.handleError));
     
     
   }
   getPublicidades(): Observable<any>{
-    return this.http.get<any>(this.url+'/adminD/publicidad/?format=json').pipe(retry(2),catchError(this.handleError));
+    return this.http.get<any>(this.url+'/publicidad/?format=json').pipe(retry(2),catchError(this.handleError));
   }
   getFavoritos(): Observable<any>{
-    return this.http.get<any>(this.url+'/adminD/favorito/?format=json').pipe(retry(2),catchError(this.handleError));
+    return this.http.get<any>(this.url+'/favorito/?format=json').pipe(retry(2),catchError(this.handleError));
   }
 
   getPerfil(email:string): Observable<any>{
-    return this.http.get<any>(this.url+'/adminD/usuario/'+email+'/?format=json').pipe(retry(2),catchError(this.handleError));
+    return this.http.get<any>(this.url+'/usuarioAPP/'+email+'/?format=json').pipe(retry(2),catchError(this.handleError));
   }
+
+  postPerfil(email:string,contrasena:string, nombre:string, apellidos:string, telefono:string){
+    let datos = {
+      "email": email,
+      "nombres": nombre,
+      "apellidos": apellidos,
+      "contrasena": contrasena,
+      "telefono": telefono,
+      "src_imagen": null
+      }
+  
+      let options = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+    var urlusuarios = this.url+'/usuarioAPP/';
+    return new Promise(resolve => {
+      this.http.post(urlusuarios,JSON.stringify(datos),options)
+        .subscribe(data => {
+          resolve(data);
+          });
+    });
+  };
 
 
 }

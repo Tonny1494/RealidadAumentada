@@ -1,25 +1,24 @@
-section{
-    margin: 15px;
-}
 
 .textoCentral{
     text-align: center;
 }
 
-ion-content.background{
-    --background: url('/assets/images/FONDO_INICIO_SESION-02.png') 0 0/100% 100% no-repeat;
-  }
+.cabecera {
+    --background: transparent;
+    background-image: linear-gradient(90deg, rgba(48, 118, 232, 1) 0%,rgba(110, 55, 211, 1) 100%);
+    }
+  
 .avatar {
     display: flex;
-    justify-content: center;
     padding-top: 0.3in;
     padding-bottom: 0.2in;
+    justify-content: center;
+  padding-right: 0.5in;
     img {
         width: 40%;
         height: 40%;
     }
-}
-
+  }
 ion-title{
     text-align: center;
     font-style: italic;
@@ -34,17 +33,12 @@ ion-title{
 }
 
 ion-item{
-    margin: 30px;
+    margin: 22px;
 }
 
 ion-content{
     text-align: center;
 }
-
-ion-toolbar{
-    --background: transparent !important;
-}
-
 
 .boton {
     --background: transparent;
