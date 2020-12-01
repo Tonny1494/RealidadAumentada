@@ -10,5 +10,35 @@
 </ion-header>
 
 <ion-content>
+  
+  <ion-button class="edit" (click)="editInfo()">
+    <ion-icon name="create-outline"></ion-icon>
+  </ion-button>
 
+  <div class="avatar2">
+    <img src={{image}} alt="foto de perfil">
+  </div>
+  
+  
+  <ion-item class="iteminput">
+    <ion-input type="text" [(ngModel)]="nombre" name="nombre" required="true" readonly={{read}} ></ion-input>
+  </ion-item>
+
+  <ion-item class="iteminput">
+    <ion-input type="text" [(ngModel)]="apellido" name="apellido" required="true" readonly={{read}} ></ion-input>
+  </ion-item>  
+
+  <ion-item class="iteminput">
+    <ion-input type="text" [(ngModel)]="email" name="email" required="true" readonly={{read}} ></ion-input>
+  </ion-item>
+
+  <ion-item class="iteminput">
+    <ion-input type="text" [(ngModel)]="telefono" name="numero" required="true" readonly={{read}} ></ion-input>
+  </ion-item>
+  
+  <section>
+    <ion-button class="boton" shape="round" >Desactivar Cuenta</ion-button>
+  </section>
+  
 </ion-content>
+

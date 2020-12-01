@@ -21,6 +21,8 @@ export class RegisterPage implements OnInit {
   telefono: string;
 
   
+
+  
   constructor(public rest: RestService,private authService: AuthService,  private router : Router, public actionSheetController: ActionSheetController) { }
   
 
@@ -47,6 +49,8 @@ export class RegisterPage implements OnInit {
       alert("Datos incompletos!!")
     }
   }
+
+  
   ngOnInit() {
   }
 

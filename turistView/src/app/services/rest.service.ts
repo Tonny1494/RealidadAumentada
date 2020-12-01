@@ -61,7 +61,9 @@ export class RestService {
   }
 
   getPerfil(email:string): Observable<any>{
-    return this.http.get<any>(this.url+'/usuarioAPP/'+email+'/?format=json').pipe(retry(2),catchError(this.handleError));
+    
+    let indice = email.indexOf('@');
+    return this.http.get<any>(this.url+'/usuarioAPP/'+email.substring(0,indice)+'/?format=json').pipe(retry(2),catchError(this.handleError));
   }
 
   postPerfil(email:string,contrasena:string, nombre:string, apellidos:string, telefono:string){

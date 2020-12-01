@@ -53,8 +53,42 @@ ion-menu-button {
         height: 40%;
     }
 }
-
+.avatar2 {
+  display: flex;
+  padding-top: 0.3in;
+  padding-bottom: 0.2in;
+  justify-content: center;
+  img {
+      width: 40%;
+      height: 40%;
+  }
+}
 ion-toolbar {
   --background: transparent;
   background-image: linear-gradient(90deg, rgba(48, 118, 232, 1) 0%,rgba(110, 55, 211, 1) 100%);
   }
+
+  .iteminput{
+    border-radius: 30px;
+    border: 1px solid #000000;
+    --background: #ffffff;
+    color: #000000;
+}
+
+.boton{
+  background-color: gray;
+  --background: transparent;
+  border-radius: 30px;
+  display: flex;
+}
+
+ion-item{
+    margin: 22px;
+}
+
+.edit{
+  padding-left: 70%;
+  --background: transparent;
+  color: #000000;
+}
+
