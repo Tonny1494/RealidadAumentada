@@ -5,13 +5,10 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from "src/app/services/auth.service";
 import { ActivatedRoute } from '@angular/router';
-<<<<<<< HEAD
 import { TranslateService } from '@ngx-translate/core';
-=======
 import { RestService } from "src/app/services/rest.service";
 
 
->>>>>>> cd4a89a70c7ba4629294807bad1ad404a87af253
 
 @Component({
   selector: 'app-root',
@@ -29,13 +26,9 @@ export class AppComponent implements OnInit {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private authservice:AuthService,
-<<<<<<< HEAD
     private translate: TranslateService,
-    private route: ActivatedRoute
-=======
     private route: ActivatedRoute,
     private AFauth: AngularFireAuth 
->>>>>>> cd4a89a70c7ba4629294807bad1ad404a87af253
   ) {
     this.initializeApp();
   }
