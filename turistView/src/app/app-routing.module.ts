@@ -56,7 +56,21 @@ const routes: Routes = [
     path: 'local/:id',
     canActivate:[AuthGuard],
     loadChildren: () => import('./local/local.module').then( m => m.LocalPageModule)
+  },
+  {
+    path: 'contactenos',
+    canActivate:[AuthGuard],
+    loadChildren: () => import('./contactenos/contactenos.module').then( m => m.ContactenosPageModule)
+  },  {
+    path: 'tutorial',
+    loadChildren: () => import('./tutorial/tutorial.module').then( m => m.TutorialPageModule)
+  },
+  {
+    path: 'politicas',
+    loadChildren: () => import('./politicas/politicas.module').then( m => m.PoliticasPageModule)
   }
+
+
 ];
 
 @NgModule({

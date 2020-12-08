@@ -19,7 +19,6 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx'
 import { Facebook } from '@ionic-native/facebook/ngx';
 
-import { AngularFirestoreModule } from "@angular/fire/firestore"; //Modulo Firestore (BD)
 import { firebaseConfig } from '../environments/environment';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -34,7 +33,6 @@ import {HttpClientModule } from '@angular/common/http';
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    AngularFirestoreModule,
     AngularFireModule.initializeApp(firebaseConfig), //Modulo 1 a importa
     AngularFireAuthModule, // Modulo 2 a importar
     HttpClientModule

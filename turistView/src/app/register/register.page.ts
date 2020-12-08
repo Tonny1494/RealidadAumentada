@@ -30,7 +30,7 @@ export class RegisterPage implements OnInit {
   {
     if (this.email!=null && this.password !=null && this.nombre!=null && this.apellido!=null && this.telefono!=null){
       this.authService.register(this.email, this.password, this.nombre+" "+this.apellido).then( () =>{
-        this.router.navigate(['/login']);
+        this.router.navigate(['/tutorial']);
         this.rest.postPerfil(this.email,this.password,this.nombre,this.apellido,this.telefono).then(() =>{
           console.log("Se registro en pythonanywhere");
         }).catch(err => {

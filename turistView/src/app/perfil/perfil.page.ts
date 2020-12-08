@@ -18,16 +18,19 @@ export class PerfilPage implements OnInit {
   email: string;
   image: string;
   read:boolean;
+  status: boolean;
   
   constructor(private rest:RestService, private auth: AuthService,    private AFauth: AngularFireAuth    ) { }
 
   ngOnInit() {
     this.read = true;
+    this.status = false;
     this.getPerfil();
   }
 
   editInfo(){
     this.read= false;
+    this.status = true;
   }
 
   
@@ -42,6 +45,14 @@ export class PerfilPage implements OnInit {
         this.image = infoUsuario["src_imagen"]
     });
     });
+  }
+
+  setPerfil(){
+    return this.rest.putPerfil(this.email,this.nombre, this.apellido, this.telefono).then( infoUsuario => {
+      this.read = true;
+      this.status = false;
+    });
+    
   }
   
 

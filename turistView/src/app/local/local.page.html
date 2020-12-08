@@ -22,13 +22,13 @@
       <img src={{logo}} />
     </div>
     <ion-card-header>
-      <ion-card-title>{{nombreComercial}}</ion-card-title>
-      <ion-card-subtitle>{{descripcion}}</ion-card-subtitle>
+      <ion-card-title  class="direccion">{{nombreComercial}}</ion-card-title>
+      <ion-card-subtitle class="slogan">{{slogan}}</ion-card-subtitle>
     </ion-card-header>
 
       <ion-card-content>
           <section>
-            <ion-label><ion-icon name="location-outline"></ion-icon>{{direccion}}</ion-label>
+            <ion-label class="direccion"><ion-icon name="location-outline"></ion-icon>{{direccion}}</ion-label>
           </section>
 
           <section>
@@ -42,11 +42,11 @@
           </section>
 
           <section>
-            <ion-label><ion-icon name="people-outline"></ion-icon>{{like}} Seguidores | <ion-icon name="people-outline"></ion-icon>{{vistas}} visitas</ion-label>
+            <ion-label class="direccion"><ion-icon name="people-outline" ></ion-icon>{{like}} Seguidores | <ion-icon name="people-outline"></ion-icon>{{vistas}} visitas</ion-label>
           </section>
 
           <section>
-            <ion-label>Acerca de nosotros</ion-label>
+            <ion-label class="direccion">Acerca de nosotros</ion-label>
           </section>
           <section>
             <ion-label>{{descripcion}}</ion-label>
@@ -62,8 +62,8 @@
             <ion-button class="boton">
               <ion-icon class="iconos" name="heart"></ion-icon>
             </ion-button>
-            <ion-button class="boton" (click)="addFavorite()">
-              <ion-icon class="iconos" name="bookmark"></ion-icon>
+            <ion-button class="boton"  (click)="addFavorite()"> 
+              <ion-icon id="fav" name="bookmark"></ion-icon>
             </ion-button>
               
           </section>

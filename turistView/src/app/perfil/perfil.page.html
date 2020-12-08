@@ -29,7 +29,7 @@
   </ion-item>  
 
   <ion-item class="iteminput">
-    <ion-input type="text" [(ngModel)]="email" name="email" required="true" readonly={{read}} ></ion-input>
+    <ion-input type="text" [(ngModel)]="email" name="email" required="true" readonly=true ></ion-input>
   </ion-item>
 
   <ion-item class="iteminput">
@@ -38,6 +38,7 @@
   
   <section>
     <ion-button class="boton" shape="round" >Desactivar Cuenta</ion-button>
+    <ion-button class="boton" shape="round" *ngIf="status" (click)="setPerfil()">Guardar Cambios</ion-button>
   </section>
   
 </ion-content>
