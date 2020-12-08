@@ -56,10 +56,25 @@ const routes: Routes = [
     path: 'local/:id',
     canActivate:[AuthGuard],
     loadChildren: () => import('./local/local.module').then( m => m.LocalPageModule)
-  },  {
+  },
+  {
     path: 'push-notification',
     loadChildren: () => import('./push-notification/push-notification.module').then( m => m.PushNotificationPageModule)
+  },
+  {
+    path: 'contactenos',
+    canActivate:[AuthGuard],
+    loadChildren: () => import('./contactenos/contactenos.module').then( m => m.ContactenosPageModule)
+  },
+  {
+    path: 'tutorial',
+    loadChildren: () => import('./tutorial/tutorial.module').then( m => m.TutorialPageModule)
+  },
+  {
+    path: 'politicas',
+    loadChildren: () => import('./politicas/politicas.module').then( m => m.PoliticasPageModule)
   }
+
 
 ];
 

@@ -37,36 +37,12 @@ export class LoginPage implements OnInit {
 
   loginGoogle() {
     
-    this.authService.loginWithGoogle().then( a =>{
-      this.toastMessage("Ingreso Exitoso");
-      this.rest.postPerfil(a.user.email,null,a.user.displayName,a.user.displayName,null).then(() =>{
-        console.log("Se registro en pythonanywhere");
-      }).catch(err => {
-        alert(err);
-      });
-      this.router.navigate(['/ra-camera']);
-    }).catch(err =>{
-      alert('algo salio mal contacta a soporte');
-      alert(err);
-      console.log(err);
-    })
+    this.authService.loginWithGoogle();
  }
 
   loginFacebook() {
 
-    this.authService.loginWithFacebook().then( a =>{
-      this.toastMessage("Ingreso Exitoso");
-      this.rest.postPerfil(a.user.email,null,a.user.displayName,a.user.displayName,null).then(() =>{
-        console.log("Se registro en pythonanywhere");
-      }).catch(err => {
-        alert(err);
-      });
-      this.router.navigate(['/ra-camera']);
-    }).catch(err =>{
-      alert('algo salio mal contacta a soporte')
-      alert(err);
-      console.log(err);
-    })
+    this.authService.loginWithFacebook();
  }
 
   ngOnInit() {

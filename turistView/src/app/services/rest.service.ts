@@ -67,7 +67,9 @@ export class RestService {
   }
 
   postPerfil(email:string,contrasena:string, nombre:string, apellidos:string, telefono:string){
+    let indice = email.indexOf('@');
     let datos = {
+      "username": email.substring(0,indice),
       "email": email,
       "nombres": nombre,
       "apellidos": apellidos,
@@ -84,6 +86,73 @@ export class RestService {
     var urlusuarios = this.url+'/usuarioAPP/';
     return new Promise(resolve => {
       this.http.post(urlusuarios,JSON.stringify(datos),options)
+        .subscribe(data => {
+          resolve(data);
+          });
+    });
+  };
+
+  putPerfil(email:string, nombre:string, apellidos:string, telefono:string){
+    let indice = email.indexOf('@');
+    let datos = {
+      "username": email.substring(0,indice),
+      "nombres": nombre,
+      "apellidos": apellidos,
+      
+      "telefono": telefono
+      }
+  
+      let options = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+    var urlusuarios = this.url+'/usuarioAPP/'+email.substring(0,indice)+'/';
+    return new Promise(resolve => {
+      this.http.put(urlusuarios,JSON.stringify(datos),options)
+        .subscribe(data => {
+          resolve(data);
+          });
+    });
+  };
+
+  postFav(id_local:string, id_usuario:string){
+    let datos = {
+      "estado": true,
+      "id_local": id_local,
+      "id_usuario": id_usuario
+      }
+  
+      let options = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+    var urlusuarios = this.url+'/favorito/';
+    return new Promise(resolve => {
+      this.http.post(urlusuarios,JSON.stringify(datos),options)
+        .subscribe(data => {
+          resolve(data);
+          });
+    });
+  };
+
+  putFav(id_favorito:string,id_local:string, id_usuario:string, activo:boolean){
+    let datos = {
+      "id_favorito": id_favorito,
+      "estado": activo,
+      "id_local": id_local,
+      "id_usuario": id_usuario
+      }
+  
+      let options = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+    var urlusuarios = this.url+'/favorito/'+id_favorito+"/";
+    return new Promise(resolve => {
+      this.http.put(urlusuarios,JSON.stringify(datos),options)
         .subscribe(data => {
           resolve(data);
           });

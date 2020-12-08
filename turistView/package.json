@@ -15,7 +15,7 @@
   "dependencies": {
     "@angular/common": "~10.0.0",
     "@angular/core": "~10.0.0",
-    "@angular/fire": "^6.0.2",
+    "@angular/fire": "^6.1.4",
     "@angular/forms": "~10.0.0",
     "@angular/platform-browser": "~10.0.0",
     "@angular/platform-browser-dynamic": "~10.0.0",
@@ -28,6 +28,7 @@
     "@ionic-native/device-motion": "^5.28.0",
     "@ionic-native/device-orientation": "^5.28.0",
     "@ionic-native/facebook": "^5.28.0",
+    "@ionic-native/firebase": "^5.30.0",
     "@ionic-native/geolocation": "^5.28.0",
     "@ionic-native/globalization": "^5.30.0",
     "@ionic-native/google-plus": "^5.28.0",
@@ -37,6 +38,7 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "cordova-admob-sdk": "^0.24.1",
+    "angularfire2": "^5.4.2",
     "cordova-plugin-android-permissions": "^1.1.0",
     "cordova-plugin-device-motion": "^2.0.1",
     "cordova-plugin-device-orientation": "^2.0.1",
@@ -45,7 +47,7 @@
     "cordova-plugin-globalization": "^1.11.0",
     "cordova-plugin-googleplus": "^8.5.0",
     "cordova-promise-polyfill": "0.0.2",
-    "firebase": "^7.13.1",
+    "firebase": "^8.1.2",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"

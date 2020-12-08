@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth'
-import { AngularFirestore } from "@angular/fire/firestore";
 import { GooglePlus } from '@ionic-native/google-plus/ngx'
-import { auth } from 'firebase'
 import { Router } from "@angular/router";
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 
@@ -16,8 +14,7 @@ export class AuthService {
   constructor( private google : GooglePlus, 
     private AFauth: AngularFireAuth, 
     private router : Router,
-    private fb: Facebook,
-    private db : AngularFirestore){}
+    private fb: Facebook){}
 
     login(email:string, password:string){
 
@@ -35,12 +32,7 @@ export class AuthService {
 
     return new Promise ((resolve, reject) => {
     this.AFauth.createUserWithEmailAndPassword(email, password).then( res =>{
-    console.log(res.user.uid);
-    const uid = res.user.uid;
-      this.db.collection('users').doc(uid).set({
-        name : name,
-        uid : uid
-      })
+    console.log(res.user.uid);      
 
     resolve(res)
     }).catch( err => reject(err))
@@ -58,17 +50,12 @@ export class AuthService {
     })
     }
     loginWithGoogle(){
-    return this.google.login({}).then( result=> {
-    const user_data_google = result;
-    return this.AFauth.signInWithCredential(auth.GoogleAuthProvider.credential(null,user_data_google.accessToken))
-    } )
+      alert("Ocurrio un error inesperado");
     }
 
     loginWithFacebook(){
-    return this.fb.login(['email','public_profile']).then( (response: FacebookLoginResponse)=>{
-    const credentia_fb = auth.FacebookAuthProvider.credential(response.authResponse.accessToken);
-    return this.AFauth.signInWithCredential(credentia_fb);
-    })
+    alert("Ocurrio un error inesperado");
+  
 
     }
 
