@@ -24,8 +24,13 @@ import { firebaseConfig } from '../environments/environment';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
-import {HttpClientModule } from '@angular/common/http';
+import {HttpClientModule , HttpClient} from '@angular/common/http';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,7 +42,14 @@ import {HttpClientModule } from '@angular/common/http';
     AngularFirestoreModule,
     AngularFireModule.initializeApp(firebaseConfig), //Modulo 1 a importa
     AngularFireAuthModule, // Modulo 2 a importar
-    HttpClientModule
+    HttpClientModule,
+    TranslateModule.forRoot({ // <--- add this
+      loader: { // <--- add this 
+        provide: TranslateLoader, // <--- add this
+        useFactory: (createTranslateLoader),  // <--- add this
+        deps: [HttpClient] // <--- add this
+      } // <--- add this
+    }) // <--- add this
   ],
   providers: [
     StatusBar,

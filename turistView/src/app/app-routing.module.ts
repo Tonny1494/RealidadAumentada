@@ -56,7 +56,11 @@ const routes: Routes = [
     path: 'local/:id',
     canActivate:[AuthGuard],
     loadChildren: () => import('./local/local.module').then( m => m.LocalPageModule)
+  },  {
+    path: 'push-notification',
+    loadChildren: () => import('./push-notification/push-notification.module').then( m => m.PushNotificationPageModule)
   }
+
 ];
 
 @NgModule({
