@@ -159,5 +159,8 @@ export class RestService {
     });
   };
 
+  getNotificaciones(): Observable<any>{
+    return this.http.get<any>(this.url+'/notificaciones/?format=json').pipe(retry(2),catchError(this.handleError));
+  }
 
 }

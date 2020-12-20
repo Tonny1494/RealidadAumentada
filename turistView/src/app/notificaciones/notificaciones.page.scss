@@ -1,7 +1,15 @@
 ion-menu-button {
     color: var(--ion-color-primary);
   }
-  
+
+  #notif{
+    text-align: center;
+    color: white;
+    --background: transparent;
+    background-image: linear-gradient(90deg, rgba(48, 118, 232, 1) 0%,rgba(110, 55, 211, 1) 100%);
+    font-style: italic;
+  }
+
   #container {
     text-align: center;
     position: absolute;
@@ -59,3 +67,12 @@ ion-toolbar {
   --background: transparent;
   background-image: linear-gradient(90deg, rgba(48, 118, 232, 1) 0%,rgba(110, 55, 211, 1) 100%);
   }
+
+ion-card-content{
+  color: #9a999e;
+}
+
+ion-card-subtitle{
+  font-weight: bold;
+  color: #000000;
+}
