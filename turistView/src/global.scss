@@ -29,3 +29,28 @@
 .custom-ion-content{
     --background:transparent;
 }
+
+.alert-head.sc-ion-alert-md + .alert-message.sc-ion-alert-md {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.alert-button-group.sc-ion-alert-md {
+justify-content: center;
+padding-bottom: 40px;
+}
+.alert-button.sc-ion-alert-md {
+border-radius: 20px;
+padding-left: 50px;
+padding-right: 50px;
+background: linear-gradient(90deg, rgba(48, 118, 232, 1),rgba(110, 55, 211, 1));
+color: white;
+}
+.alert-message.sc-ion-alert-md, .alert-input-group.sc-ion-alert-md {
+color: #717982;
+text-align: center;
+}
+
+.alert-wrapper.sc-ion-alert-md {
+border-radius: 10px;
+}

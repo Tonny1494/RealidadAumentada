@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Platform } from "@ionic/angular";
+import { Platform, AlertController} from "@ionic/angular";
 import { Plugins } from "@capacitor/core";
 const { CameraPreview } = Plugins;
 import { CameraPreviewOptions } from "@capacitor-community/camera-preview";
@@ -63,7 +63,8 @@ export class RaCameraPage {
     public androidPermissions: AndroidPermissions,
     private geolocation: Geolocation,
     public deviceMotion: DeviceMotion,
-    public deviceOrientation: DeviceOrientation
+    public deviceOrientation: DeviceOrientation,
+    public alertController: AlertController
   ) {}
 
   obtenerPunto() {
@@ -284,10 +285,23 @@ export class RaCameraPage {
     return bearing; // returns angle in grades from North
   }
 
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: '',
+      subHeader: '',
+      message: 'Mantega la cámara fija. No baje la cámara',
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
+
   ngOnInit() {
     this.user = this.route.snapshot.paramMap.get("user");
     this.obtenerPunto();
     this.obtenerPublicidades();
+    this.presentAlert();
     if (this.platform.is("cordova")) {
       this.openCamera();
       this.getAcceleration();
