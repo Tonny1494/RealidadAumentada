@@ -39,6 +39,7 @@ export class FavoritosPage implements OnInit {
             let idLocal = data["id_local"];
             let logo = data["src_logo"];
             let descripcion = data["descripcion"];
+            let direccion = data["direccion"];
             let indice = auth.email.indexOf('@');
             let usuario = auth.email.substring(0,indice);
             if (usuario == usuario1){
@@ -47,6 +48,7 @@ export class FavoritosPage implements OnInit {
                 idLocal: idLocal,
                 logo: logo,
                 descripcion: descripcion,
+                direccion: direccion
               });
             }
             
