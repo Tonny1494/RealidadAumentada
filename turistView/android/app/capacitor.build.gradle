@@ -10,9 +10,11 @@ android {
 apply from: "../capacitor-cordova-android-plugins/cordova.variables.gradle"
 dependencies {
     implementation project(':capacitor-community-camera-preview')
+    implementation "com.google.android.gms:play-services-base:11.0.4"
+    implementation "com.google.android.gms:play-services-ads:11.0.4"
     implementation "com.facebook.android:facebook-android-sdk:5.13.0"
-    implementation "com.google.android.gms:play-services-auth:15.0.1"
-    implementation "com.google.android.gms:play-services-identity:15.0.1"
+    implementation "com.google.android.gms:play-services-auth:11.0.4"
+    implementation "com.google.android.gms:play-services-identity:11.0.4"
 }
 
 

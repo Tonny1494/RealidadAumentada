@@ -14,11 +14,15 @@
   <ion-card *ngFor="let p of notificaciones">
   
     <ion-card-content>
+      <ion-list lines="none">
       <ion-item>
         <ion-icon name="notifications-circle-outline" slot="start"></ion-icon>
-        <ion-label>{{p}}</ion-label>
+        <ion-label>
+          <h2>{{p}}</h2>
+          <p>{{p}}</p>
+        </ion-label>
       </ion-item>
-     
+    </ion-list>
     </ion-card-content>
   </ion-card>
 </ion-content>
