@@ -52,16 +52,6 @@ ion-card-header, ion-card-content{
       }
   }
 
-  .avatar2 {
-    display: flex;
-    padding-top: 0.15in;
-    padding-bottom: 0.2in;
-    justify-content: center;
-    img {
-        width: 25%;
-        height: 25%;
-    }
-  }
 
 section{
   padding-bottom: 0.2in;
@@ -76,7 +66,7 @@ section{
 .iconos{
   font-size: 25px; //Preferred size here
   color: blue;
-  
+
 }
 
 #fav{
@@ -93,6 +83,5 @@ section{
 .slogan{
   font-style: italic;
 }
-
 
 

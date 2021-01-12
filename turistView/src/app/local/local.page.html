@@ -18,12 +18,24 @@
  <ion-content fullscreen id="InfoLocal">
 
   <ion-card>
-    <div class="avatar2">
-      <img src={{logo}} />
-    </div>
+    <!-- <div class="avatar2"> -->
+     
+    <!-- </div> -->
     <ion-card-header>
+      <ion-grid>
+        <ion-row class="ion-justify-content-center">
+          <ion-col size="3">
+            <div>
+      <ion-avatar>
+        <img src={{logo}} />
+      </ion-avatar>
+    </div>
+    </ion-col>
+  </ion-row>
+  </ion-grid>
       <ion-card-title  class="direccion">{{nombreComercial}}</ion-card-title>
       <ion-card-subtitle class="slogan">{{slogan}}</ion-card-subtitle>
+    
     </ion-card-header>
 
       <ion-card-content>
@@ -42,7 +54,7 @@
           </section>
 
           <section>
-            <ion-label class="direccion"><ion-icon name="people-outline" ></ion-icon>{{like}} Seguidores | <ion-icon name="people-outline"></ion-icon>{{vistas}} visitas</ion-label>
+            <ion-label class="direccion"><ion-icon name="people-outline" ></ion-icon>{{like}} Seguidores  <ion-icon name="people-outline"></ion-icon>{{vistas}} visitas</ion-label>
           </section>
 
           <section>
