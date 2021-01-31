@@ -10150,10 +10150,10 @@ body {
   padding-right: 1rem;
   margin: 0;
 }
-.sb-topnav.navbar-dark #sidebarToggle {
+.sb-topnav.navbar-dark #sidenavAccordionToggle {
   color: rgba(255, 255, 255, 0.5);
 }
-.sb-topnav.navbar-light #sidebarToggle {
+.sb-topnav.navbar-light #sidenavAccordionToggle {
   color: #212529;
 }
 
@@ -10260,3 +10260,4 @@ body {
 .sb-sidenav-light .sb-sidenav-footer {
   background-color: #e9ecef;
 }
+

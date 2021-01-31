@@ -1,6 +1,11 @@
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.hashers import make_password
+from rest_framework import authentication, permissions
 from rest_framework import viewsets
+from rest_framework import status
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
@@ -12,10 +17,22 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import logout
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.contrib import messages #import messages
 from .serializers import *
 from .models import *
 from django.db.models import F
 from django.contrib.auth.hashers import make_password
+from django.core.mail import send_mail
+from django.conf import settings
+from django.views.decorators.http import require_http_methods
+from django.http import HttpResponse,HttpResponseBadRequest
+from django.core import serializers
+import json
+from fcm_django.models import FCMDevice
+
+
 
 #from .serializers import UserSerializer, GroupSerializer,TCategoriaSerializer,TComentarioSerializer,TEscaneosSerializer,TFavoritoSerializer,TGaleriaSerializer,TLocalSerializer,TNotificacionesSerializer,TPermisoSerializer,TRolSerializer,TRolpermisoSerializer,TTelefonoSerializer,TUsuarioSerializer
 #from .models import Categoria,Comentario,Escaneos,Favorito,Galeria,Local,Notificaciones,Permiso,Rol,Rolpermiso,Telefono,User
@@ -96,6 +113,10 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = TUsuarioSerializer
 
+class UsuarioAPPViewSet(viewsets.ModelViewSet):
+    queryset = UserAPP.objects.all()
+    serializer_class = TUsuarioAPPSerializer
+
 
 class PublicidadViewSet(viewsets.ModelViewSet):
     queryset = Publicidad.objects.all()
@@ -103,7 +124,9 @@ class PublicidadViewSet(viewsets.ModelViewSet):
 
 
 def index(request):
-    return render(request, 'productos/index.html')
+    #obtener permisos en base al rol anteriro    
+    lpermisos = obtenerPermisos(request.user)
+    return render(request, 'productos/index.html',{'permisos': lpermisos})
 
 
 def tablaUsuario(request):
@@ -117,8 +140,8 @@ def tablaUsuario(request):
 def tablaLocal(request):
     #obtener permisos en base al rol anteriro
     lpermisos = obtenerPermisos(request.user)
-    local = Local.objects.all()
-    contexto = {'locales': local,'permisos': lpermisos  }
+    local = Local.objects.all() 
+    contexto = {'locales': local,'permisos': lpermisos }
     return render(request, 'productos/tablaLocal.html', contexto)
 
 
@@ -131,8 +154,10 @@ def tableCategoria(request):
 
 
 def tableFavorito(request):
+    #obtener permisos en base al rol anteriro    
+    lpermisos = obtenerPermisos(request.user)
     favorito = Favorito.objects.all()
-    contexto = {'favoritos': favorito}
+    contexto = {'favoritos': favorito,'permisos': lpermisos}
     return render(request, 'productos/tablaFavorito.html', contexto)
 
 
@@ -150,77 +175,79 @@ def tableGaleria(request):
     contexto = {'galerias': galeria ,'permisos': lpermisos}
     return render(request, 'productos/tablaGaleria.html', contexto)
 def tableGaleria2(request):
-
-
-    galeria = Galeria.objects.all()
-    contexto = {'galerias': galeria}
+    #obtener permisos en base al rol anteriro    
+    lpermisos = obtenerPermisos(request.user)
+    locales = []
+    user = User.objects.filter(email=request.user).first()
+    local = Local.objects.filter(adminLocal=user).all()#filtras que locales tiene ese usuario
+    for i in local:
+        if i.id_local not in locales:
+            locales.append(i.id_local)
+    galeria = Galeria.objects.filter(id_local__in=locales)
+    contexto = {'galerias': galeria,'permisos': lpermisos}
     return render(request, 'productos/tablaGaleria2.html', contexto)
+def notificaciones(request):
+    #obtener permisos en base al rol anteriro    
+    lpermisos = obtenerPermisos(request.user)
+    notificacion = Notificaciones.objects.all()
+    contexto = {'notificaciones': notificacion,'permisos': lpermisos}
+    return render(request, 'productos/notificaciones.html', contexto)
 def localDelete(request):
-
-
+    #obtener permisos en base al rol anteriro    
+    lpermisos = obtenerPermisos(request.user)
     if request.method == "POST":
         local = Local.objects.get(id_local=request.POST.get('local'))
         local.delete()
-    return render(request, 'productos/tablaLocal.html', {"locales": Local.objects.all()})
+    return render(request, 'productos/tablaLocal.html', {"locales": Local.objects.all(),'permisos': lpermisos})
 
 
 def categoriaDelete(request, id_categoria):
+    #obtener permisos en base al rol anteriro    
+    lpermisos = obtenerPermisos(request.user)    
     categoria = Categoria.objects.get(id_categoria=id_categoria)
     categoria.delete()
-    return render(request, 'productos/tablaCategoria.html', {"categorias": Categoria.objects.all()})
+    return render(request, 'productos/tablaCategoria.html', {"categorias": Categoria.objects.all(),'permisos': lpermisos})
 
 
 def favoritoDelete(request, id_favorito):
+    #obtener permisos en base al rol anteriro    
+    lpermisos = obtenerPermisos(request.user)    
     favorito = Favorito.objects.get(id_favorito=id_favorito)
     favorito.delete()
-    return render(request, 'productos/tablaFavorito.html', {"favoritos": Favorito.objects.all()})
+    return render(request, 'productos/tablaFavorito.html', {"favoritos": Favorito.objects.all(),'permisos': lpermisos})
 
 
 def telefonoDelete(request, id_telefono):
+    #obtener permisos en base al rol anteriro    
+    lpermisos = obtenerPermisos(request.user)   
     telefono = Telefono.objects.get(id_telefono=id_telefono)
     telefono.delete()
-    return render(request, 'productos/tablaTelefono.html', {"telefonos": Telefono.objects.all()})
+    return render(request, 'productos/tablaTelefono.html', {"telefonos": Telefono.objects.all(),'permisos': lpermisos})
 
 
 def galeriaDelete(request, id_contenido):
+    #obtener permisos en base al rol anteriro    
+    lpermisos = obtenerPermisos(request.user)    
     galeria = Galeria.objects.get(id_contenido=id_contenido)
     galeria.delete()
-    return render(request, 'productos/tablaGaleria.html', {"galerias": Galeria.objects.all()})
+    return render(request, 'productos/tablaGaleria.html', {"galerias": Galeria.objects.all(),'permisos': lpermisos})
 # ...
 
 
 @csrf_exempt
 def login(request):
-    # Creamos el formulario de autenticación vacío
-    print("hola mundo")
-    #user = authenticate(username="chjoguer", password='zywcCQAmPf')
-   # print(user)
     form = AuthenticationForm()
     if request.method == "POST":
-        # Añadimos los datos recibidos al formulario
         form = AuthenticationForm(data=request.POST)
-        # Si el formulario es válido...
         if form.is_valid():
-            # Recuperamos las credenciales validadas
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            # Verificamos las credenciales del usuario
             user = authenticate(username=username, password=password)
             print("verificando")
-
-            # Si existe un usuario con ese nombre y contraseña
             if user is not None:
-                # Hacemos el login manualmente
                 do_login(request, user)
                 print("si existe")
-                # Y le redireccionamos a la portada
-                # return redirect('registroNoticias/')
-
-                #obtener permisos en base al rol anteriro
-                lpermisos = obtenerPermisos(user)
-
-                return render(request, "productos/index.html", {'permisos': lpermisos })
-
+                return redirect("/tablaLocal")
         else:
             print(form.is_valid())
             print("Password o usuario incorrecto")
@@ -246,32 +273,44 @@ def logout_view(request):
 
 @login_required(login_url='/')
 def registrarCategoria(request):
-    lpermisos = obtenerPermisos(request.user)
     if request.method == 'POST':
         if(request.POST.get("tipo") != None and request.POST.get("descripcion") != None):
             categoria = Categoria(tipo=request.POST.get(
                 "tipo"), descripcion=request.POST.get("descripcion"))
             categoria.save()
             # return HttpResponse(status=200)
-            return render(request, 'productos/crear/crearCategoria.html')
+            return redirect(tablaCategoria)
         return HttpResponse(status=404)
     if request.method == 'GET':
-        return render(request, 'productos/crear/crearCategoria.html')
+        lpermisos = obtenerPermisos(request.user)
+        return render(request, 'productos/crear/crearCategoria.html',{'permisos': lpermisos})
 
 
 @login_required(login_url='/')
 def registrarLocal(request):
-    lpermisos = obtenerPermisos(request.user)
     if request.method == 'POST':
-        if(request.POST.get("estrella") != None and request.POST.get("slogan") != None and request.POST.get("latitud") != None and request.POST.get("longitud") != None and request.POST.get("vista") != None and request.POST.get("direccion") != None and request.POST.get("nombrec") != None and request.POST.get("like") != None and request.POST.get("descripcion") != None and request.POST.get("imagen") != None):
-            local = Local(latitud=request.POST.get("latitud"), estrellas=request.POST.get("estrella"), longitud=request.POST.get("longitud"), slogan=request.POST.get("slogan"), vistas=request.POST.get(
-                "vista"), descripcion=request.POST.get("descripcion"), likes=request.POST.get("like"), direccion=request.POST.get("direccion"), nombre_comercial=request.POST.get("nombrec"), src_logo=request.POST.get('imagen'))
-            local.save()
+        imagen = request.FILES.get('imagen')
+        if imagen != None:
+            if( request.POST.get("slogan") != None and request.POST.get("latitud") != None and request.POST.get("longitud") != None and request.POST.get("direccion") != None and request.POST.get("nombrec") != None and request.POST.get("descripcion") != None):
+                categoria = Categoria.objects.filter(id_categoria=request.POST.get("categoria")).first()
+                local = Local(latitud=request.POST.get("latitud"), estrellas=0, longitud=request.POST.get("longitud"), slogan=request.POST.get("slogan"), vistas=
+                    0, descripcion=request.POST.get("descripcion"), likes=0, direccion=request.POST.get("direccion"), nombre_comercial=request.POST.get("nombrec"), src_logo=request.FILES['imagen'],categoria=categoria)
+                local.save()
             # return HttpResponse(status=200)
-            return render(request, 'productos/crear/crearLocal.html',{'permisos': lpermisos })
-        return HttpResponse(status=404)
+            #return render(request, 'productos/crear/crearLocal.html',{'permisos': lpermisos })
+        else:
+            if(request.POST.get("estrella") != None and request.POST.get("slogan") != None and request.POST.get("latitud") != None and request.POST.get("longitud") != None and request.POST.get("vista") != None and request.POST.get("direccion") != None and request.POST.get("nombrec") != None and request.POST.get("like") != None and request.POST.get("descripcion") != None):
+                categoria = Categoria.objects.filter(id_categoria=request.POST.get("categoria"))
+                local = Local(latitud=request.POST.get("latitud"), estrellas=0, longitud=request.POST.get("longitud"), slogan=request.POST.get("slogan"), vistas=0
+                    , descripcion=request.POST.get("descripcion"), likes=0, direccion=request.POST.get("direccion"), nombre_comercial=request.POST.get("nombrec"),categoria=categoria)
+                local.save()
+            # return HttpResponse(status=200)
+            #return render(request, 'productos/crear/crearLocal.html',{'permisos': lpermisos })
+        return redirect(tablaLocal)
+        #return HttpResponse(status=404)
     if request.method == 'GET':
-        return render(request, 'productos/crear/crearLocal.html', {"categorias": Categoria.objects.all()})
+        lpermisos = obtenerPermisos(request.user)
+        return render(request, 'productos/crear/crearLocal.html', {"categorias": Categoria.objects.all(),'permisos': lpermisos})
 
 
 @login_required(login_url='/')
@@ -296,26 +335,49 @@ def editarLocal(request):
             local.direccion = request.POST['latitud']
         if(request.POST['slogan'] != None or request.POST['slogan'] != ''):
             local.direccion = request.POST['slogan']
-        if(bool(request.FILES.get('imagen', False)) == True):
+        imagen = request.FILES.get('imagen')
+        if(imagen!=None):
             local.src_logo = request.FILES['imagen']
         local.save()
-    return render(request, 'productos/tablaLocal.html', {"locales": Local.objects.all()})
+        # dispositivos=FCMDevice.objects.filter(active=True)
+        # dispositivos.send_message(
+        #     title="local se agrego"+request.POST['nombrec'],
+        #     body="se ha agregado un local"
+        # )
+    return redirect(tablaLocal)
 
 
 @login_required(login_url='/')
 def registrarUsuario(request):
-    lpermisos = obtenerPermisos(request.user)
+    #lpermisos = obtenerPermisos(request.user)
+    print(request.method)
+    
     if request.method == 'POST':
-        if(request.POST.get("email") != None and request.POST.get("nombre") != None and request.POST.get("apellido") != None and request.POST.get("contrasena") != None and request.POST.get("telefono") != None and request.POST.get("imagen") != None):
-            rol = Rol.objects.all().filter(id_rol=request.POST.get("rol")).first()
-            usuario = User(username=request.POST.get("email").split('@')[0], email=request.POST.get("email"), nombres=request.POST.get("nombre"), first_name=request.POST.get("nombre"), contrasena=request.POST.get(
-                "contrasena"), password=make_password(request.POST.get("contrasena")), telefono=request.POST.get("telefono"), apellidos=request.POST.get("apellido"), last_name=request.POST.get("apellido"), src_imagen=request.POST.get('imagen'),id_rol=rol)
-            usuario.save()
+        src_imagen = request.FILES.get('imagen')
+        if src_imagen!=None:
+            if(request.POST.get("email") != None and request.POST.get("nombre") != None and request.POST.get("apellido") != None and request.POST.get("contrasena") != None and request.POST.get("telefono") != None and request.FILES["imagen"] != None):
+                rol = Rol.objects.all().filter(id_rol=request.POST.get("rol")).first()
+                usuario = User(username=request.POST.get("email").split('@')[0], email=request.POST.get("email"), nombres=request.POST.get("nombre"), first_name=request.POST.get("nombre"), contrasena=request.POST.get(
+                "contrasena"), password=make_password(request.POST.get("contrasena")), telefono=request.POST.get("telefono"), apellidos=request.POST.get("apellido"), last_name=request.POST.get("apellido"), src_imagen=request.FILES['imagen'],id_rol=rol)
+                usuario.save()
+                #return redirect(tablaUsuario)
             # return HttpResponse(status=200)
-            return render(request, 'productos/crear/crearUsuario.html',{'permisos': lpermisos })
-        return HttpResponse(status=404)
+            #return render(request, 'productos/crear/crearUsuario.html',{'permisos': lpermisos })
+            else:    
+                messages.warning(request, 'No se pudo registrar Usuario.')
+        else:
+            if(request.POST.get("email") != None and request.POST.get("nombre") != None and request.POST.get("apellido") != None and request.POST.get("contrasena") != None and request.POST.get("telefono") != None ):
+                rol = Rol.objects.all().filter(id_rol=request.POST.get("rol")).first()
+                usuario = User(username=request.POST.get("email").split('@')[0], email=request.POST.get("email"), nombres=request.POST.get("nombre"), first_name=request.POST.get("nombre"), contrasena=request.POST.get(
+                "contrasena"), password=make_password(request.POST.get("contrasena")), telefono=request.POST.get("telefono"), apellidos=request.POST.get("apellido"), last_name=request.POST.get("apellido"),id_rol=rol)
+                usuario.save()
+            else:    
+                messages.warning(request, 'No se pudo registrar Usuario.')
+        return redirect(tablaUsuario)
+       
     if request.method == 'GET':
-        return render(request, 'productos/crear/crearUsuario.html', {"roles": Rol.objects.all()})
+        lpermisos = obtenerPermisos(request.user)
+        return render(request, 'productos/crear/crearUsuario.html', {"roles": Rol.objects.all(), 'permisos': lpermisos})
 
 
 @login_required(login_url='/')
@@ -333,21 +395,24 @@ def editarUsuario(request):
         if(request.POST['telefono'] != None or request.POST['telefono'] != ''):
             usuario.telefono = request.POST['telefono']
         # if(request.POST['id_rol']!=None or request.POST['id_rol']!=''):
-     #       usuario.id_rol=request.POST['id_rol']
+            
+        #    usuario.id_rol=rol
         if(bool(request.FILES.get('imagen', False)) == True):
             usuario.src_imagen = request.FILES['imagen']
         usuario.save()
-    return render(request, 'productos/tablaUsuario.html', {"usuarios": User.objects.all()})
+    return redirect(tablaUsuario)
+    #return render(request, 'productos/tablaUsuario.html', {"usuarios": User.objects.all()})
 
 
 @login_required(login_url='/')
 def usuarioDelete(request):
+    lpermisos = obtenerPermisos(request.user)
     if request.method == "POST":
         usuario = User.objects.get(email=request.POST.get('email'))
         usuario.delete()
-    return render(request, 'productos/tablaUsuario.html', {"usuarios": User.objects.all()})
+    return render(request, 'productos/tablaUsuario.html', {"usuarios": User.objects.all() ,'permisos': lpermisos})
 
-
+@login_required(login_url='/')
 def registrarPublicidad(request):
     if request.method == 'POST':
         if(request.POST.get("descripcion") != None):
@@ -357,4 +422,54 @@ def registrarPublicidad(request):
             return render(request, 'productos/crear/crearPublicidad.html')
         return HttpResponse(status=404)
     if request.method == 'GET':
-        return render(request, 'productos/crear/crearPublicidad.html')
+        lpermisos = obtenerPermisos(request.user)
+        return render(request, 'productos/crear/crearPublicidad.html',{'permisos': lpermisos})
+@api_view(["PUT"])
+@csrf_exempt
+def update_favorito(request, favorito_id):
+    user = request.user.id
+    payload = json.loads(request.body)
+    try:
+        favorito_item = Favorito.objects.filter(added_by=user, id=favorito_id)
+        # returns 1 or 0
+        favorito_item.update(**payload)
+        favorito = Favorito.objects.get(id=favorito_id)
+        serializer = TFavoritoSerializer(favorito)
+        return JsonResponse({'favorito': serializer.data}, safe=False, status=status.HTTP_200_OK)
+    except ObjectDoesNotExist as e:
+        return JsonResponse({'error': str(e)}, safe=False, status=status.HTTP_404_NOT_FOUND)
+    except Exception:
+        return JsonResponse({'error': 'Something terrible went wrong'}, safe=False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+@login_required(login_url='/')
+def registrarNotificaciones(request):
+    if request.method == 'POST':
+        if(request.POST.get("alcance") != None and request.POST.get("notificacion") != None):
+            notificacion = Notificaciones(alcance=request.POST.get(
+                "alcance"), notificacion=request.POST.get("notificacion"))
+            notificacion.save()
+            # return HttpResponse(status=200)
+            return redirect(tablaCategoria)
+        return HttpResponse(status=404)
+    if request.method == 'GET':
+        lpermisos = obtenerPermisos(request.user)
+        return render(request, 'productos/crear/crearNotificacion.html',{'permisos': lpermisos})
+@csrf_exempt
+@require_http_methods(['POST'])
+def guardar_token(request):
+    body=request.body.decode('utf-8')
+    bodyDict=json.loads(body)
+    token=bodyDict['token']
+    existe=FCMDevice.objects.filter(registration_id=token,active=True)
+    if len(existe)>0:
+        return HttpResponseBadRequest(json.dumps({'mensaje':'el token ya existe'}))
+    dispositivo=FCMDevice()
+    dispositivo.registration_id=token
+    dispositivo.active=True
+    #si el usuario esta logeado procede a enlazar
+    if request.user.is_authenticated:
+        dispositivo.user=request.user
+    try:
+        dispositivo.save()
+        return HttpResponse(json.dumps({'mensaje':'no se ha podido guardar'}))
+    except:
+        return HttpResponseBadRequest(json.dumps({'mensaje':'no se ha podido guardar'}))

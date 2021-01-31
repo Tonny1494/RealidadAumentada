@@ -1,0 +1,181 @@
+{% extends 'productos/index.html' %}
+{% load static %}
+{% block main%}
+<div class="container-fluid">
+    <h1 class="mt-4">Tabla Usuario</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/index">Opcion</a></li>
+        <li class="breadcrumb-item active">Eliminar Usuario</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table mr-1"></i>
+            Tabla Usuario
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead >
+                        <tr>
+                            <th>Email</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Telefono</th>
+                            <th>contraseña</th>
+                            <th>Imagen</th>
+                            <th>Id Rol</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if usuarios %}
+                        {% for u in usuarios %}
+                        <tr >
+                            <td >{{u.email}}</td>
+                            <td>{{u.nombres}}</td>
+                            <td>{{u.apellidos}}</td>
+                            <td>{{u.telefono}}</td>
+                            <td>{{u.contrasena}}</td>
+                             <td>
+                                <img src="http://localhost:8000{{ MEDIA_URL }}{{u.src_imagen}}" alt="imagen">
+                            </td>
+                            <td>{{u.id_rol}}</td>
+                            <td>
+                                <button type="button" data-toggle="modal" data-target="#editar" data-email="{{u.email}}" data-nombres="{{u.nombres}}" data-apellidos="{{u.apellidos}}" data-telefono="{{u.telefono}}" data-contrasena="{{u.contrasena}}" data-src="{{u.src_imagen}}" data-rol="{{u.id_rol}}" ><i class="fas fa-edit" ></i></button>
+                                <button type="button" data-toggle="modal" data-target="#eliminar" data-email="{{u.email}}"><i class="far fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                        {% endfor %} 
+                        {% else %}
+                        <h2>No se presentan registros de locales </h2>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        < <!-- aqui va el modal-->
+            <div class="modal fade" id="editar" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="modalLabel">Editar Usuario</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="{% url 'editarUsuario' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden"  id="usuario" name='usuario' class="btn">
+                        <div class="form-group">
+                            <label for="email" class="col-form-label">Email</label>
+                            <input type="text" class="form-control" id="email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="nombres" class=class="col-form-label">Nombres</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" id="nombres" name="nombres">
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="imagen" class="col-md-auto col-form-label">Imagen</label>
+                            <div class="col-sm-10">
+                                <button type="button" class="btn btn-primary" id="btn-imagen" >Seleccionar Imagen</button>
+                                <input type="file" accept="image/*" class="form-control" id="imagen" name="imagen">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="apellidos" class=class="col-form-label">Apellidos</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" id="apellidos" name="apellidos">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contrasena" class="col-form-label">Contraseña</label>
+                            <div class="col-sm-10">
+                              <input type="password" class="form-control" id="contrasena" name="contrasena">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono" class="col-form-label">Telefono</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" id="telefono" name="telefono">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">
+                          Enviar
+                        </button>
+                        </form>
+                      </div>
+                    </div>
+                </div>
+              </div>  
+            <!-- Modal -->
+            <div class="modal fade" id="eliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Eliminar Usuario</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                    Estas Seguro de Eliminar Usuario
+                        <form  action="{% url 'usuarioDelete' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden"  id="email" name="email" class="btn">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Aceptar</button>
+                        </form>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    
+                    </div>
+                </div>
+                </div>
+            </div>
+         
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) {
+        $('#eliminar').on('show.bs.modal',function(event){
+            var button = $(event.relatedTarget)
+            var id_modal = button.data('email')
+            console.log(id_modal)
+            var modal = $(this)
+
+            modal.find('.modal-body #email').val(id_modal);
+            console.log(modal.find('.modal-body #local').val())
+        });
+    });
+</script>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) {
+        $('#editar').on('show.bs.modal',function(event){
+            var button = $(event.relatedTarget)
+            var email = button.data('email')
+            var nombres=button.data('nombres')
+            var apellidos=button.data('apellidos')
+            var contrasena=button.data('contrasena')
+            var telefono=button.data('telefono')
+            var src=button.data('src_imagen')
+            var id_rol=button.data('id_rol')
+            console.log(email)
+            var modal = $(this)
+            modal.find('.modal-body #email').val(email);
+            modal.find('.modal-body #nombres').val(nombres);
+            modal.find('.modal-body #apellidos').val(apellidos);
+            modal.find('.modal-body #telefono').val(telefono);
+            modal.find('.modal-body #contrasena').val(contrasena);
+            modal.find('.modal-body #src_imagen').val(src);
+            //modal.find('.modal-body #id_rol').val(id_rol);
+            console.log(modal.find('.modal-body #email').val())
+        });
+    });
+</script>
+{% endblock %}

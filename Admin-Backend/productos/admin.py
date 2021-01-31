@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Categoria,Comentario,Escaneos,Favorito,Galeria,Local,Notificaciones,Permiso,Rol,Rolpermiso,Telefono,Usuario
+from .models import UserAPP,Categoria,Comentario,Escaneos,Favorito,Galeria,Local,Notificaciones,Permiso,Rol,Rolpermiso,Telefono,User,Publicidad
 # Register your models here.
 admin.site.register(Categoria)
 admin.site.register(Comentario)
@@ -12,7 +12,9 @@ admin.site.register(Permiso)
 admin.site.register(Rol)
 admin.site.register(Rolpermiso)
 admin.site.register(Telefono)
-admin.site.register(Usuario)
+admin.site.register(User)
+admin.site.register(Publicidad)
+admin.site.register(UserAPP)
 
 
 

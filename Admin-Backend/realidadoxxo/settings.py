@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'productos',
     'rest_framework',
     'corsheaders',
-    'bootstrap4'
+    'bootstrap4',
+    'pwa',
+    'fcm_django'
 ]
 
 MIDDLEWARE = [
@@ -72,6 +74,8 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTH_USER_MODEL = 'productos.User'
 
 WSGI_APPLICATION = 'realidadoxxo.wsgi.application'
 
@@ -123,11 +127,17 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'turistecu593@gmail.com'
+EMAIL_HOST_PASSWORD = 'Pelle123'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
+    
 }
 
 CORS_ALLOWED_ORIGINS = [
@@ -135,6 +145,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://localhost:8100"
 ]
+CORS_ORIGIN_ALLOW_ALL =True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -146,3 +157,19 @@ STATICFILES_DIRS = [
 ]
 MEDIA_URL = '/images/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media/images/')
+
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'sw.js')
+
+FCM_DJANGO_SETTINGS = {
+         # default: _('FCM Django')
+        "APP_VERBOSE_NAME": "turistView",
+         # Your firebase API KEY
+        "FCM_SERVER_KEY": "AIzaSyDrgbMlUhQtWO00ksVYJfL8mQj2pOs6eSE",
+         # true if you want to have only one active device per registered user at a time
+         # default: False
+        "ONE_DEVICE_PER_USER": False,
+         # devices to which notifications cannot be sent,
+         # are deleted upon receiving error response from FCM
+         # default: False
+        "DELETE_INACTIVE_DEVICES": True,
+}

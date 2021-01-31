@@ -29,13 +29,10 @@ class Rol(models.Model):
 
 
 class Rolpermiso(models.Model):
-    # Field name made lowercase.
     id_rolpermiso = models.AutoField(
         db_column='id_RolPermiso', primary_key=True)
-    # Field name made lowercase.
     id_rol = models.ForeignKey(Rol, on_delete=models.CASCADE,
                                blank=True, null=True, related_name='user_rol_rolpermiso')
-    # Field name made lowercase.
     id_permiso = models.ForeignKey(
         Permiso, on_delete=models.CASCADE, blank=True, null=True, related_name='user_rol_permiso')
     fecha = models.DateTimeField(blank=True, null=True)
@@ -63,7 +60,9 @@ class Categoria(models.Model):
 
 
 class User(AbstractUser):
-    email = models.CharField(primary_key=True, max_length=40)
+    email = models.EmailField('email address', unique=True,primary_key=True, max_length=40)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
     nombres = models.CharField(max_length=50, blank=True, null=True)
     apellidos = models.CharField(max_length=50, blank=True, null=True)
     contrasena = models.CharField(max_length=12, blank=True, null=True)
@@ -110,7 +109,21 @@ class Local(models.Model):
 
     def __str__(self):
         return self.nombre_comercial
+class UserAPP(models.Model):
+    username = models.CharField(primary_key=True, max_length=40)
+    email = models.CharField(max_length=50,blank=True, null=True)
+    nombres = models.CharField(max_length=50, blank=True, null=True)
+    apellidos = models.CharField(max_length=50, blank=True, null=True)
+    contrasena = models.CharField(max_length=12, blank=True, null=True)
+    telefono = models.CharField(max_length=12, blank=True, null=True)
+    src_imagen = models.ImageField(
+        verbose_name="Imagen", db_column='src_Imagen', max_length=200, blank=True, null=True)
+    class Meta:
+        verbose_name = 'UserApp'
+        verbose_name_plural = "UsersApp"
 
+    def __str__(self):
+        return self.email
 
 class Favorito(models.Model):
     # Field name made lowercase.
@@ -119,7 +132,7 @@ class Favorito(models.Model):
         Local, on_delete=models.CASCADE, blank=True, null=True)
     # Field name made lowercase.
     id_usuario = models.ForeignKey(
-        User, on_delete=models.CASCADE, blank=True, null=True)
+        UserAPP, on_delete=models.CASCADE, blank=True, null=True)
     fecha = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -127,7 +140,7 @@ class Favorito(models.Model):
         verbose_name_plural = "Favoritos"
 
     def __str__(self):
-        return self.id_favorito
+        return str(self.id_favorito)
 
 
 class Notificaciones(models.Model):
@@ -135,7 +148,7 @@ class Notificaciones(models.Model):
     id_notificacion = models.AutoField(
         db_column='id_Notificacion', primary_key=True)
     alcance = models.CharField(max_length=20, blank=True, null=True)
-    notificacion = models.CharField(max_length=50, blank=True, null=True)
+    notificacion = models.CharField(max_length=400, blank=True, null=True)
     # Field name made lowercase.
     id_usuario = models.ForeignKey(
         User, on_delete=models.CASCADE, blank=True, null=True)
@@ -235,4 +248,4 @@ class Publicidad(models.Model):
         verbose_name_plural = "Publicidades"
 
     def __str__(self):
-        return self.id_publicidad
+        return str(self.id_publicidad)

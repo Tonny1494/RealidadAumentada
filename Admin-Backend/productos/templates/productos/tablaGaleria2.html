@@ -1,0 +1,26 @@
+{% extends 'productos/index.html' %}
+{% load static %}
+{% block main%}
+<div class="container-fluid">
+    <h1 class="mt-4">Galeria</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/index">Opcion</a></li>
+        <li class="breadcrumb-item active">Ver Galeria</li>
+    </ol>
+    {%if galerias %}
+    <div class="row">
+    
+    {% for o in galerias %}
+            <div class="col-4 col-md-3">
+                <div class="card">
+                    <img src="http://localhost:8000{{ MEDIA_URL }}{{o.src_path}}" alt="Avatar" style="width:100%">
+                </div>
+             </div>
+    {% endfor %} 
+    </div>
+    {% else %}
+        <h2>No se presentan registros de Galeria </h2>
+    {% endif %}
+    
+</div>
+{% endblock %}

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from .models import Categoria,Comentario,Escaneos,Favorito,Galeria,Local,Notificaciones,Permiso,Rol,Rolpermiso,Telefono,Usuario
+from .models import *
+#from .models import Categoria,Comentario,Escaneos,Favorito,Galeria,Local,Notificaciones,Permiso,Rol,Rolpermiso,Telefono,User
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
@@ -55,6 +56,14 @@ class TTelefonoSerializer(serializers.ModelSerializer):
         fields='__all__'
 class TUsuarioSerializer(serializers.ModelSerializer):
     class Meta:
-        model= Usuario
+        model= User
+        fields='__all__'
+class TUsuarioAPPSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= UserAPP
+        fields='__all__'
+class TPublicidadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Publicidad
         fields='__all__'
         
